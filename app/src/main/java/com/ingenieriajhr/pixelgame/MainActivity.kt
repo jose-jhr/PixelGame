@@ -2,17 +2,57 @@ package com.ingenieriajhr.pixelgame
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.ingenieriajhr.pixelgame.anim.Animations
+import com.ingenieriajhr.pixelgame.anim.InterfaceListenerAnimation
+import com.ingenieriajhr.pixelgame.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var vb:ActivityMainBinding
+
+    //Animation Rotate
+    lateinit var animations:Animations
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        vb = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(vb.root)
+
+        //change notification bar
+        window.statusBarColor = ContextCompat.getColor(this,R.color.blue)
+        //init animations
+        animations = Animations(this)
+        //aniamationRotateInit
+        animationRotateInitial()
 
 
 
 
 
 
+    }
 
+    /**
+     * Animation rotate Initial
+     */
+    private fun animationRotateInitial() {
+        //start animation
+        animations.rotationView(vb.txtPixelGame,1500L,0)
+        //init listener animation
+        animations.initListenerAnimation(object :InterfaceListenerAnimation{
+            override fun endAnimation() {
+                Toast.makeText(this@MainActivity, "End animation", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun startAnimation() {
+                Toast.makeText(this@MainActivity, "Start Animation", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun repeatAnimation() {
+                Toast.makeText(this@MainActivity, "Repeat Animation", Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 }
