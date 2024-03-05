@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import com.ingenieriajhr.pixelgame.anim.Animations
 import com.ingenieriajhr.pixelgame.anim.InterfaceListenerAnimation
 import com.ingenieriajhr.pixelgame.databinding.ActivityMainBinding
+import com.ingenieriiajhr.jhrCameraX.CameraJhr
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,6 +15,9 @@ class MainActivity : AppCompatActivity() {
 
     //Animation Rotate
     lateinit var animations:Animations
+
+    //Init cameraXJHR
+    lateinit var cameraJhr: CameraJhr
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         vb = ActivityMainBinding.inflate(layoutInflater)
@@ -25,13 +29,20 @@ class MainActivity : AppCompatActivity() {
         animations = Animations(this)
         //aniamationRotateInit
         animationRotateInitial()
-
-
-
-
-
+        //Init Camera Jhr
+        cameraJhr = CameraJhr(this)
 
     }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (cameraJhr.allpermissionsGranted()&&!cameraJhr.ifStartCamera){
+            starCameraJhr()
+        }else{
+            cameraJhr.noPermissions()
+        }
+    }
+
 
     /**
      * Animation rotate Initial
