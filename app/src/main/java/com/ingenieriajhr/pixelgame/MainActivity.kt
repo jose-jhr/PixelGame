@@ -1,13 +1,21 @@
 package com.ingenieriajhr.pixelgame
 
+import android.graphics.Bitmap
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
+import androidx.camera.core.ImageProxy
 import androidx.core.content.ContextCompat
 import com.ingenieriajhr.pixelgame.anim.Animations
 import com.ingenieriajhr.pixelgame.anim.InterfaceListenerAnimation
 import com.ingenieriajhr.pixelgame.databinding.ActivityMainBinding
+import com.ingenieriajhr.pixelgame.fragments.FragmentNavigationManager
+import com.ingenieriajhr.pixelgame.fragments.MainSelectFragment
+import com.ingenieriiajhr.jhrCameraX.BitmapResponse
 import com.ingenieriiajhr.jhrCameraX.CameraJhr
+import com.ingenieriiajhr.jhrCameraX.ImageProxyResponse
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +26,9 @@ class MainActivity : AppCompatActivity() {
 
     //Init cameraXJHR
     lateinit var cameraJhr: CameraJhr
+
+    //late init fragment Navigation
+    lateinit var fragmentNavigationManager: FragmentNavigationManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         vb = ActivityMainBinding.inflate(layoutInflater)
@@ -31,17 +42,11 @@ class MainActivity : AppCompatActivity() {
         animationRotateInitial()
         //Init Camera Jhr
         cameraJhr = CameraJhr(this)
-
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (cameraJhr.allpermissionsGranted()&&!cameraJhr.ifStartCamera){
-            starCameraJhr()
-        }else{
-            cameraJhr.noPermissions()
-        }
-    }
+
+
+
 
 
     /**
@@ -53,7 +58,9 @@ class MainActivity : AppCompatActivity() {
         //init listener animation
         animations.initListenerAnimation(object :InterfaceListenerAnimation{
             override fun endAnimation() {
-                Toast.makeText(this@MainActivity, "End animation", Toast.LENGTH_SHORT).show()
+                fragmentNavigationManager = FragmentNavigationManager(supportFragmentManager,R.id.fragmentMain,MainSelectFragment(),0)
+                //gone txt init
+                goneTxtInit()
             }
 
             override fun startAnimation() {
@@ -65,5 +72,12 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    /**
+     * Gone txt init
+     */
+    private fun goneTxtInit() {
+        vb.txtPixelGame.visibility = View.GONE
     }
 }
